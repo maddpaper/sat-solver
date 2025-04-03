@@ -19,3 +19,4 @@ x3 -> 0  or  x3 -> 0  or  x3 -> 1
 x4 -> 0      x4 -> 1      x4 -> 0
 x5 -> 1      x5 -> 1      x5 -> 1
 x3 and x4 will depend on the clauses, but these are the possible outputs for our case.
+P.S. I forgot to add a step which is related to the counting process. The initial step needs to check if the count is bigger than 2^(n-k). If it is, the element gets skipped and it moves on to the next.
