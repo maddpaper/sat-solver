@@ -1,0 +1,60 @@
+Alright, let's say that we have an input file with arrays. For example:
+  [1 2 3 4 5]
+  [-1 -2 -3 -4 -5]
+  [1 -2]
+  [3 -4 5]
+  [5]
+  [-1 2]
+  [1 -1 2]
+First, dedupe any arrays in this way: If you have arrays like [1 2] and [2 1], eliminate one of them and one shall remain, like [1 2]. If you have [1 1 2], you dedupe it to [1 2] because it means the same thing. If you have an array like [1 -1 2], you remove the entire array because you have both the positive and negative value of the same integer which is 1.
+Now, find the highest element in all the arrays and put it in an integer called "n". So for our example, we see that the highest number is 5, therefore we put n = 5.
+Now, here's the actual part that you need to do. Think of the numbers in the arrays as variables. 1 represents x1, 2 represents x2, 3 represents x3 and so on. You need to assign values of 0 or 1 to each variable based on certain conditions. Do these steps:
+First, for each variable, there's a count of their positive and negative instances. So you have a count of the positive instances of x1, like count_pos_x1, a count of the negative instances of x1, like count_neg_x1, a count of the positive instances of x2, like count_pos_x2, a count of negative instances of x2 like count_neg_x2 and so on. The positivity and negativity count is determined when you check if the element you're currently on is either positive or negative. For example, if 1 is positive, then the count of positive x1s will be affected. If it's negative, the count of negative x1s will be affected. Now, each count for their variable, both positive and negative, starts with 2^(n-1), which in our case is n = 5, therefore 2^(5-1) = 2^(4) = 16. So we have:
+
+count_pos_x1 = 16
+count_pos_x2 = 16
+count_pos_x3 = 16
+count_pos_x4 = 16
+count_pos_x5 = 16
+count_neg_x1 = 16
+count_neg_x2 = 16
+count_neg_x3 = 16
+count_neg_x4 = 16
+count_neg_x5 = 16
+
+Next, compare each array in part and do as follows. First array is [1 2 3 4 5]. What we want to check for this array is the arrays that have any common elements between them. Or rather, if we can find arrays that have everything in common. We check it first with [-1 -2 -3 -4 -5]. We see that we don't actually have any common elements with any of them. [1 2 3 4 5] has no common elements with [-1 -2 -3 -4 -5] and not all of them are common. We go to the next array and compare them. Next is [1 -2]. Compare the arrays [1 2 3 4 5] and [1 -2]. We see that we have one common element in those arrays, which is 1. However, -2 is not common with the other array. So we don't have every single element in the array as common. Therefore we skip and move on to the next array, which is [3 -4 5]. We see that the common elements between each other are 3 and 5. However, -4 is not common with the array, therefore the array shall be skipped and we move on to the next array, which is 5. This time, we see that we have all the elements between the arrays are common, because [5] is included in [1 2 3 4 5]. Therefore, the array [1 2 3 4 5] shall be deleted, along with its counts and we go with the next array, which is [-1 -2 -3 -4 -5]. You don't check any array that came before it because those arrays have already been checked, so instead you check with the next arrays, not the previous ones. We check the arrays and we check it with every single element in the array, however, if you proceed with the previous steps mentioned before, you will find that the array [-1 -2 -3 -4 -5] won't have any arrays that will have every single element in common with each other, therefore it remains and we move on with the next, which is [1 -2]. We check it with every single array, but as mentioned before, it won't have any arrays that will have every single element in common with each other, so it shall remain. Next is [3 -4 5]. We compare it with the arrays, but as you can see, this time, we find the right arrays, which is [5]. So we have [3 -4 5] and [5]. All elements are common between each other, therefore [3 -4 5] gets deleted along with its counts. Here's a quick note. If you ever found yourself comparing [5] with [3 -4 5], you deleted the one that had more elements in it, which is [3 -4 5]. You always delete the bigger array between each other. So then [5] will remain. Next is [-1 2], but also this time, you won't find anything. Therefore, the remaining arrays are:
+
+[-1 -2 -3 -4 -5]
+[1 -2]
+[5]
+[-1 2]
+
+Next, sort the arrays by length from lowest to highest, such as:
+[5]
+[1 -2]
+[-1 2]
+[-1 -2 -3 -4 -5]
+
+Check each array in part and compare with the other arrays but this time, you need to check if you can "include" the arrays into the other. So first we have the array [5]. First, we see that 5 is positive, therefore we take the count of positive x5s and subtract 2^(n-k), with k being the length of the array, so 2^(5-1) = 2^(4) = 16. So, in the end, we'll have count_pos_x5 = 16 - 16 = 0. We check it with [1 -2]. First, check the array. We see that we have a positive 1 and a negative -2, therefore we take the count of positive x1s and count of negative x2s and subtract them each with 2^(n-k), which is 2^(5-2) = 2^3 = 8. So the count of positive x1s is 16 - 8 = 8 and the count of negative x2s is 16 -8 = 8. We see that [5] is missing from [1 -2], therefore we can say that [5] can be included in [1 -2]. We check if we have any missing elements from the array. We can see that 3 and 4 are missing from the array. Therefore, we need to perform calculations between their counts. You perform it like this. We check to see how many elements are in between the arrays. We have 1, -2 and 5. So we have 3 elements.
+Therefore, we must subtract each of their respective counts with 2^(n-l), with l in this case being the number of elements that we have here, so 2^(5-3) = 2^(2) = 4. We also need to subtract the missing elements as well, which are 3 and 4. For them, we need to subtract their respective positive and negative counts. So here's how it goes. First we do 1,-2,5. We check if each are positive and negative. We have 1 which is positive, therefore we need to subtract the count of positive x1s with 2^(2), so we have count of positive x1s is 8 - 4 = 4. We check the next element, -2. We see it's negative, therefore we do the same thing as before and the final result for the count of negative x2s will be 8-4 = 4. Next, we have 5. 5 is positive. However, the count of positive x5s is already 0. If it's 0, or a negative number, you skip the element and move to the missing elements, which are 3 and 4. For them, you need to subtract both the positive and negative counts of each variable with 2^(n-l) = 2^(2) = 4. So count_pos_x3, count_neg_x3, count_pos_x4 and count_neg_x4 will be equal to 16 - 4 = 12. After we've done that, we move on to the next array, which is [-1 2]. Compare [5] with [-1 2], we see that 5 can be included in it, therefore we do the exact same steps as before. First check [-1 2] and subtract the counts of each respective variable with 2^(n-k), with k here being the length of the array, so 2^(3) = 8. So, the count of negative x1s will be 16 - 8 = 8 and the count of positive x2s will also be 16 - 8. Now, we do the checking with [5] and [-1 2]. We see that we have missing elements, which are 3 and 4. Do the exact same thing as before. In the end, we'll have count_neg_x1 = 4, count_pos_x2 = 4, count_pos_x5 = 0, count_pos_x3, count_neg_x3, count_pos_x4 and count_neg_x4 all equal to 8. Now, we have [5] and [-1 -2 -3 -4 -5]. Check [-1 -2 -3 -4 -5]. We subtract the count of each variable with 2^(n-k) which is 2^(5-5)=2^0=1. So we would have count_neg_x1 = 3, count_neg_x2=3, count_neg_x3 = 7, count_neg_x4 = 7, count_neg_x5 = 15. Now, we check [5] with [-1 -2 -3 -4 -5]. This time, we cannot include 5 into [-1 -2 -3 -4 -5] because we already have a negative instance of 5 in the array, therefore we can't do anything. Therefore we skip it. And we move to the next array, which is [1 -2]. We already did the subtraction for it so we don't need to do it again. We check with [-1 2]. We skip. We have [-1 -2 -3 -4 -5]. We also skip. Next is [-1 2]. We check with [-1 -2 -3 -4 -5]. We skip, because we already have the elements in there. Next would be [-1 -2 -3 -4 -5], but there's nothing else to check it with so it is the end. After all the calculations, we should have the counts:
+
+count_pos_x1 = 4
+count_neg_x1 = 3
+count_pos_x2 = 4
+count_neg_x2 = 3
+count_pos_x3 = 8
+count_neg_x3 = 7
+count_pos_x4 = 8
+count_neg_x4 = 7
+count_pos_x5 = 0
+count_neg_x5 = 15
+
+Now here's what you need to do. First, you have to check if you have both the count of positive and negative instances of the same variable equal to 0. So for example, if you have the count of positive x5s equal to 0 and the count of negative x5s also equal to 0, then you'd have to stop the program and output "This formula is unsatisfiable". In our case, none of the counts meet the criteria, so we move on. Now here's the part where you have to assign a value to each variable. First, take a look at the counts and check which of the counts is equal to 0. As we can see. We have count_pos_x5 = 0, therefore x5 will have a value of 1. If it was count_neg_x5 which was equal to 0, then x5 would have been 0. Then, what you need to do is go through each array one last time and give a value to each unassigned variable. So we go through each array. We have [5], which is already defined as 1, therefore it's alright. We move on to the next array, which is [1 -2]. x1 and x2 are still undefined, therefore we take a variable, x1 and we give it a random input, either 0 or 1. Let's say that x1 randomly became 0. Now we need to check if the amount of 0s is equal to k-1, with k being the length of the array. The statement is true because we have one 0 which is x1 and k is 2, so 2-1 = 1. So 1 = 1. And we see we still have an undefined variable, which is x2. Therefore x2 must become 0 in order to fulfill the truth value, because it has a minus in front of 2. Therefore it's a negation. Next we have [-1 2]. We already defined these variables, so there's no point. Therefore we skip the array and go to [-1 -2 -3 -4 -5]. We have the undefined variables x3 and x4. We check how many 0s are in the array and check if it's equal to k-1. We have no 0s, because when negated, -1 becomes 1, -2 becomes 1 and -5 becomes 1. Therefore, we put a random value between 0 and 1 for x3. Let's say x3 is 1. We check the 0s again, they're not equal. We still have one more undefined variable, which is x4. Therefore we put another random value, let's say 1. So in the end, we'd have:
+
+x1 -> 0
+x2 -> 0
+x3 -> 1 
+x4 -> 1 
+x5 -> 1
+
+Write the code in Python, make sure to input the arrays from a text file and tell me the time complexity of this program.
