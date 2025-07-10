@@ -1,2 +1,2 @@
-# sat-polynomial-time-solver
+# ssp-polynomial-time-solver
 WIP
