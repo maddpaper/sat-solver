@@ -1,1 +1,1 @@
-# ssp-solver
+# sat-solver
